@@ -1,27 +1,53 @@
 %%
 clear
 clc
-nrPlayers = 10;%cannot be changed right now due to nr colors
+nrPlayers = 2; % can be a number between 1 and 26
 nrRounds = 1;
 height = 1;
-width = 30;
+width = 25;
 colors = [[0 1 0]; [0 0 1]; [0 1 1]; [1 0 0];[1,1,0];[1,0,1];[0.7529,0.7529,0.7529];[0.5,0,0];[0.5,0.5,0];[0,0.5,0];[0.5,0,0.5];[0,0.5,0.5];[0,0,0.5];[102,205,170]/255;[188,143,143]/255;[210,105,30]/255;[245,222,179]/255;[255,192,203]/255;[105,105,105]/255;[85,107,47]/255;[221,160,221]/255;[139,69,19]/255;[112,128,144]/255;[255,165,0]/255;[255,215,0]/255;[220,20,60]/255];
-starMatrix = zeros(height,width);
+starMatrix = zeros(height,width); % To print out stars to illustrate where the vendors are situated
+valueOfSquare = ones(height,width);
+
 
 for i=1:nrPlayers
     paintCell(i,1,1,colors); % to have right color for legend
 end
-
-
-paintMap(starMatrix);
 playerpos = zeros(nrPlayers,2);
+
 scores = zeros(height,width,nrPlayers);
+paintMap(scores,colors,playerpos);
 actions = 0;
+
+preRecordedActions = zeros(nrPlayers*nrRounds,2);
+preRecordedActions(1:20,1) = unifrnd(0,width,1,20);
+preRecordedActions(1:20,2) = unifrnd(0,height,1,20);
+
+% preRecordedActions(11:20,1) = 
+
+
+% 
+% if(preRecordedActions(:,:) ~= 0)
+% else
+%     throw(MException('noob'));
+% end
+
+title('Hotelling´s location model');
+xlabel('Hej');
+
 while(actions ~= nrPlayers*nrRounds)
     if(actions >= nrPlayers)
         starMatrix(playerpos(mod(actions,nrPlayers)+1,2),playerpos(mod(actions,nrPlayers)+1,1)) = starMatrix(playerpos(mod(actions,nrPlayers)+1,2),playerpos(mod(actions,nrPlayers)+1,1)) - 1;
     end
+
+    
+%     to play the game
     [x,y] = ginput(1);
+
+%     to play a prerecorded set of actions
+%     x = preRecordedActions(actions+1,1);
+%     y = preRecordedActions(actions+1,2); 
+
     x = floor(x+1);
     y = floor(y+1);
     starMatrix(y,x) = starMatrix(y,x)+1;
@@ -50,15 +76,20 @@ while(actions ~= nrPlayers*nrRounds)
                    end
                end
             end
-            paintAnyNrColoredCell(nonzeros(playersHere)',i,j,colors,playerpos); % plot all cells in apropriet color
+            %if you want to play the game and have the cells update every
+            %time. If you are only interested in the final map, then down
+            %below
+            
             
             for k = 1:min(nrPlayers,actions+1)
                 if(playersHere(k) ~= 0)
-                    scores(i,j,playersHere(k)) = 1/length(nonzeros(playersHere));
+                    scores(i,j,playersHere(k)) = valueOfSquare(i,j)/length(nonzeros(playersHere));
                 else
                     scores(i,j,k) = 0;
                 end
             end
+%             
+%             paintAnyNrColoredCell(nonzeros(playersHere)',i,j,colors,playerpos); % plot all cells in apropriet color
             
             if(starMatrix(i,j) > 0)
                 plot(j-0.5,i-0.5,'w*');
@@ -69,15 +100,21 @@ while(actions ~= nrPlayers*nrRounds)
    actions = actions +1;
 end
 
+%paints an entire map based on the final outcome of the game
+paintMap(scores,colors,playerpos);
 
 for i = 1:nrPlayers
-   stringForLegend{i} = ['P' num2str(i) '=' num2str(sum(sum(scores(:,:,i))))];
+   playerStrings{i} = ['P' num2str(i)]; %can load any string here
+end
+
+for i = 1:nrPlayers
+   stringForLegend{i} = [playerStrings{i} '=' num2str(sum(sum(scores(:,:,i))))];
 end
 
 %Perfect. The 'AutoUpdate','off' option is what I was looking for.
 
 legend(stringForLegend(:));
-
+figure(1)
 
 
 
