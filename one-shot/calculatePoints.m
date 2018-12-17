@@ -1,4 +1,5 @@
 function points = calculatePoints(locations, bins)
+[locations, idx] = sort(locations);
 if ~isempty(locations)
     if ~issorted(locations)
         error('Input array is not sorted');
@@ -40,6 +41,7 @@ if ~isempty(locations)
             continue;
         end
     end
+   points = points(idx);
 else
     points = zeros(1,0);
 end

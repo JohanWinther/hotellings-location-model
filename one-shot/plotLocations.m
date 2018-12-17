@@ -1,9 +1,13 @@
-function p = plotLocations(locations, names, bins)
+function [p,texts] = plotLocations(locations, names, bins)
+[locations, idx] = sort(locations);
+names = names(idx);
+texts = {};
 if (~isempty(locations))
     p = plot(locations,1:length(locations), '*');
     hold on;
     for i=1:length(locations)
-        text(locations(i)+1, i, names(i))
+    t = text(locations(i)+1, i, names(i));
+    texts{end+1} = t;
     end
 else
     p = 0;
