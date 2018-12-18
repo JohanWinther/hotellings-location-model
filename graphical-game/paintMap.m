@@ -21,8 +21,7 @@ for i=1:size(matrix,1)
        else
            paintAnyNrColoredCell(nonzeros(playersHere(i,j,:))',i,j,colors,playerpos); % plot all cells in apropriet color
        end
-          %txt = ['[' , num2str(j) , ',' , num2str(i) , ']'];
-          txt = [num2str(j-1),',',num2str(size(matrix,1)-i)]; 
+          txt = [num2str(size(matrix,1)-i),',',num2str(j-1)]; 
           text(j-0.7,i-0.1,txt);
    end
 end
