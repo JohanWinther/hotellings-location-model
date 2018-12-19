@@ -1,19 +1,25 @@
-%%
-clear;clc;clf;
-nrPlayers = 26; % can be a number between 1 and 26
+function icecream(nrPlayers,width,height)
+% clear;
+clc;clf;
+% nrPlayers = 3; % can be a number between 1 and 26
 nrRounds = 1;
-height = 1;
-width = 5;
+% height = 5;
+% width = 5;
 %preRecordedActions = zeros(nrPlayers*nrRounds,2);
 
-javaaddpath('C:\Users\eriks\Documents\MATLAB\hotellings-location-model\Jav_atree_simulations\JavaTree\bin\gameTree');
-%ans = gameTree.HelloWello.test({'26','2', '4'})
+if( (width*height)^nrPlayers > 10^6)
+    disp('Too large tree to calculate')
+%     return
+end
+
+javaaddpath('C:\Users\eriks\Documents\MATLAB\hotellings-location-model\Jav_atree_simulations\JavaTree\bin');
 results = evalc('gameTree.Structure.main({num2str(width), num2str(height), num2str(nrPlayers)})');
 results = splitlines(results);
 newResults = zeros(length(results)-1,3);
 for k = 1:length(results)-1
     newResults(k,:) = eval(results{k});
 end
+utility = eval(results{end});
 
 colors = [[0 1 0]; [0 0 1]; [0 1 1]; [1 0 0];[1,1,0];[1,0,1];[0.7529,0.7529,0.7529];[0.5,0,0];[0.5,0.5,0];[0,0.5,0];[0.5,0,0.5];[0,0.5,0.5];[0,0,0.5];[102,205,170]/255;[188,143,143]/255;[210,105,30]/255;[245,222,179]/255;[255,192,203]/255;[105,105,105]/255;[85,107,47]/255;[221,160,221]/255;[139,69,19]/255;[112,128,144]/255;[255,165,0]/255;[255,215,0]/255;[220,20,60]/255];
 starMatrix = zeros(height,width); % To print out stars to illustrate where the vendors are situated
@@ -30,6 +36,7 @@ paintMap(scores,colors,playerpos);
 actions = 0;
 xlim([0 width]);
 ylim([0 height]);
+axis off;
 
 %preRecordedActions(1:20,1) = unifrnd(0,width,1,20);
 %preRecordedActions(1:20,2) = unifrnd(0,height,1,20);
@@ -99,7 +106,7 @@ while(actions ~= nrPlayers*nrRounds)
                 end
             end
 %             
-             paintAnyNrColoredCell(nonzeros(playersHere)',i,j,colors,playerpos,height); % plot all cells in apropriet color
+              paintAnyNrColoredCell(nonzeros(playersHere)',i,j,colors,playerpos,height); % plot all cells in apropriet color
             
             if(starMatrix(i,j) > 0)
                 plot(j-0.5,i-0.5,'wo','MarkerSize',10,'MarkerFaceColor',[1 1 1]);
@@ -112,20 +119,20 @@ while(actions ~= nrPlayers*nrRounds)
 end
 
 %paints an entire map based on the final outcome of the game
-%paintMap(scores,colors,playerpos);
+% paintMap(scores,colors,playerpos);
 
-for i = 1:nrPlayers
-   playerStrings{i} = ['P' num2str(i)]; %can load any string here
-end
+% for i = 1:nrPlayers
+%    playerStrings{i} = ['P' num2str(i)]; %can load any string here
+% end
+% 
+% for i = 1:nrPlayers
+%    stringForLegend{i} = [playerStrings{i} '=' num2str(sum(sum(scores(:,:,i))))];
+% end
 
-for i = 1:nrPlayers
-   stringForLegend{i} = [playerStrings{i} '=' num2str(sum(sum(scores(:,:,i))))];
-end
 
 %Perfect. The 'AutoUpdate','off' option is what I was looking for.
 
-legend(stringForLegend(:));
-figure(1)
-
+legend(utility);
+disp(newResults);
 
 

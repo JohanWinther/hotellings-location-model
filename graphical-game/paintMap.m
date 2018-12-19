@@ -19,7 +19,7 @@ for i=1:size(matrix,1)
        if(matrix(i,j,:) == 0)
            fill([j-1,j,j,j-1],[i-1,i-1,i,i],'w');
        else
-           paintAnyNrColoredCell(nonzeros(playersHere(i,j,:))',i,j,colors,playerpos); % plot all cells in apropriet color
+           paintAnyNrColoredCell(nonzeros(playersHere(i,j,:))',i,j,colors,playerpos,size(matrix,1)); % plot all cells in apropriet color
        end
           txt = [num2str(size(matrix,1)-i),',',num2str(j-1)]; 
           text(j-0.7,i-0.1,txt);
