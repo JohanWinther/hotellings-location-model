@@ -1,6 +1,6 @@
 function utility = icecream_scores(nrPlayers,width,height)
 % clear;
-clc;%clf;
+%clc;%clf;
 % nrPlayers = 3; % can be a number between 1 and 26
 nrRounds = 1;
 % height = 5;
@@ -12,7 +12,7 @@ if( (width*height)^nrPlayers > 10^6)
 %     return
 end
 
-javaaddpath('.\Java');
+javaaddpath('C:\Users\johan\Google Drive\Chalmers\Kurser\ENM140 - Game Theory and Rationality\Projects\Game Theory Project\Javakod');
 results = evalc('gameTree.Structure.main({num2str(width), num2str(height), num2str(nrPlayers)})');
 results = splitlines(results);
 newResults = zeros(length(results)-1,3);
